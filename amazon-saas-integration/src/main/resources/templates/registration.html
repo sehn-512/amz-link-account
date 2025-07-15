@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon SaaS Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: #0073e6;
+            color: #0073e6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0073e6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #005bb5;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .terms {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <h3>Vendor's Logo</h3>
+    </div>
+
+    <div class="tab-container">
+        <div class="tab active" onclick="showForm('signup')">Create Account</div>
+        <div class="tab" onclick="showForm('signin')">Sign In</div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signup-form" class="form-section active">
+        <h2>Create a new account</h2>
+        <form id="signupForm" onsubmit="handleSignup(event)">
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" name="email" required>
+                <div class="error" id="signup-email-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="signup-username">Username</label>
+                <input type="text" id="signup-username" name="username" required>
+                <div class="error" id="signup-username-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" name="password" required>
+                <div class="error" id="signup-password-error"></div>
+            </div>
+
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+    </div>
+
+    <!-- Sign In Form -->
+    <div id="signin-form" class="form-section">
+        <h2>Sign in</h2>
+        <form id="signinForm" onsubmit="handleSignin(event)">
+            <div class="form-group">
+                <label for="signin-email">Email</label>
+                <input type="email" id="signin-email" name="email" required>
+                <div class="error" id="signin-email-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="signin-password">Password</label>
+                <input type="password" id="signin-password" name="password" required>
+                <div class="error" id="signin-password-error"></div>
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+    </div>
+
+    <div class="terms">
+        By creating an account or signing in, you agree to our Terms of Service
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const redirectUrl = /*[[${redirectUrl}]]*/ '';
+
+    function showForm(type) {
+        const tabs = document.querySelectorAll('.tab');
+        const forms = document.querySelectorAll('.form-section');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+        forms.forEach(form => form.classList.remove('active'));
+
+        if (type === 'signin') {
+            tabs[1].classList.add('active');
+            document.getElementById('signin-form').classList.add('active');
+        } else {
+            tabs[0].classList.add('active');
+            document.getElementById('signup-form').classList.add('active');
+        }
+    }
+
+    function handleSignup(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData);
+
+        // Send signup request to server
+        fetch('/register/amazon/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Redirect back to Amazon with account info
+                    redirectToAmazon(result.email, result.username);
+                } else {
+                    showError('signup-email-error', result.message);
+                }
+            })
+            .catch(error => {
+                showError('signup-email-error', 'An error occurred. Please try again.');
+            });
+    }
+
+    function handleSignin(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData);
+
+        // Send signin request to server
+        fetch('/register/amazon/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Redirect back to Amazon with account info
+                    redirectToAmazon(result.email, result.username);
+                } else {
+                    showError('signin-email-error', result.message);
+                }
+            })
+            .catch(error => {
+                showError('signin-email-error', 'An error occurred. Please try again.');
+            });
+    }
+
+    function redirectToAmazon(email, username) {
+        if (redirectUrl) {
+            // Append account info to redirect URL
+            const url = new URL(redirectUrl);
+            url.searchParams.append('infoField1', email);
+            if (username) {
+                url.searchParams.append('infoField2', username);
+            }
+
+            // Redirect back to Amazon
+            window.location.href = url.toString();
+        }
+    }
+
+    function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+</script>
+</body>
+</html>

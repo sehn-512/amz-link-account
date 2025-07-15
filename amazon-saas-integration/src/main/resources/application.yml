@@ -1,0 +1,44 @@
+server:
+  port: 8443
+
+spring:
+  application:
+    name: amazon-saas-integration
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/amazon_saas_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: myuser
+    password: mypassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: true
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+# Amazon Integration Settings
+amazon:
+  integration:
+    # Amazon Developer Portal에서 제공받은 키
+    public-key: bd84fd2b-0944-40ba-b4f7-1c02ae7ed45a
+    private-key: 09335369-2246-4999-8c02-300f821b1128
+
+
+    # 라이센스 관리 페이지 URL
+    license-management-url: https://yourdomain.com/licenses
+
+# Logging
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
