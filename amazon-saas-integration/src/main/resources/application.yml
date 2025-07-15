@@ -1,5 +1,7 @@
 server:
   port: 8443
+  ssl:
+    enabled: false  # Development용, Production에서는 true로 설정
 
 spring:
   application:
@@ -32,13 +34,27 @@ amazon:
     public-key: bd84fd2b-0944-40ba-b4f7-1c02ae7ed45a
     private-key: 09335369-2246-4999-8c02-300f821b1128
 
-
-    # 라이센스 관리 페이지 URL
+    # 라이센스 관리 페이지 URL (실제 배포 도메인으로 변경 필요)
     license-management-url: https://yourdomain.com/licenses
 
 # Logging
 logging:
   level:
-    org.springframework.web: INFO
+    com.sehn.amazonsaasintegration: DEBUG
+    org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction: DEBUG
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints for health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized

@@ -1,4 +1,5 @@
 package com.sehn.amazonsaasintegration.service;
+
 import com.sehn.amazonsaasintegration.dto.request.SubscriptionActivateRequest;
 import com.sehn.amazonsaasintegration.dto.request.SubscriptionDeactivateRequest;
 import com.sehn.amazonsaasintegration.dto.request.SubscriptionGetRequest;
@@ -41,26 +42,47 @@ public class SubscriptionService {
         SubscriptionResponse response = new SubscriptionResponse();
 
         try {
-            // 사용자 확인
-            User user = userRepository.findByAmazonUserId(request.getUserId()).orElse(null);
+            log.info("Processing subscription activation - subscriptionId: {}, userId: {}, productId: {}, numberOfLicenses: {}",
+                    request.getSubscriptionId(), request.getUserId(), request.getProductId(), request.getNumberOfLicenses());
+
+            // 사용자 확인 (amazonUserId 또는 email로 검색)
+            User user = findUserByIdOrEmail(request.getUserId());
             if (user == null) {
-                log.error("User not found for Amazon user ID: {}", request.getUserId());
+                log.error("User not found for ID: {}", request.getUserId());
                 response.setResponse(SubscriptionResponse.ResponseValue.FAIL_USER_INVALID);
                 return response;
             }
 
+            log.info("Found user: {} (email: {})", user.getAmazonUserId(), user.getEmail());
+
             // 구독 중복 확인
             if (subscriptionRepository.existsBySubscriptionId(request.getSubscriptionId())) {
                 log.warn("Subscription already exists: {}", request.getSubscriptionId());
+
+                // 기존 구독 정보 반환
+                Subscription existingSubscription = subscriptionRepository.findBySubscriptionId(request.getSubscriptionId()).get();
+                if (existingSubscription.getSubscriptionType() == Subscription.SubscriptionType.TEAM) {
+                    List<License> licenses = licenseRepository.findBySubscription(existingSubscription);
+                    long unassigned = licenses.stream().filter(l -> l.getStatus() == License.LicenseStatus.UNASSIGNED).count();
+                    long assigned = licenses.stream().filter(l -> l.getStatus() == License.LicenseStatus.ASSIGNED).count();
+
+                    response.setNumberOfUnusedLicenses((int) unassigned);
+                    response.setNumberOfUsedLicenses((int) assigned);
+                    response.setManagementURL(licenseManagementUrl + "?subscriptionId=" + existingSubscription.getSubscriptionId());
+                }
+
                 response.setResponse(SubscriptionResponse.ResponseValue.OK);
                 return response;
             }
 
             // 구독 타입 결정
-            boolean isTeamSubscription = request.getNumberOfLicenses() != null;
+            boolean isTeamSubscription = request.getNumberOfLicenses() != null && request.getNumberOfLicenses() > 0;
             Subscription.SubscriptionType type = isTeamSubscription
                     ? Subscription.SubscriptionType.TEAM
                     : Subscription.SubscriptionType.SUS;
+
+            log.info("Creating {} subscription with {} licenses", type,
+                    isTeamSubscription ? request.getNumberOfLicenses() : "N/A");
 
             // 구독 생성
             Subscription subscription = Subscription.builder()
@@ -73,6 +95,7 @@ public class SubscriptionService {
                     .build();
 
             subscription = subscriptionRepository.save(subscription);
+            log.info("Created subscription: {}", subscription.getId());
 
             // Team 구독인 경우 라이센스 생성
             if (isTeamSubscription) {
@@ -86,6 +109,8 @@ public class SubscriptionService {
                     licenseRepository.save(license);
                 }
 
+                log.info("Created {} licenses for subscription", licenseCount);
+
                 // Team 구독 응답 설정
                 response.setNumberOfUnusedLicenses(licenseCount);
                 response.setNumberOfUsedLicenses(0);
@@ -96,7 +121,7 @@ public class SubscriptionService {
             log.info("Successfully activated subscription: {}", request.getSubscriptionId());
 
         } catch (Exception e) {
-            log.error("Error activating subscription", e);
+            log.error("Error activating subscription: " + request.getSubscriptionId(), e);
             response.setResponse(SubscriptionResponse.ResponseValue.FAIL_OTHER);
         }
 
@@ -110,6 +135,9 @@ public class SubscriptionService {
         SubscriptionResponse response = new SubscriptionResponse();
 
         try {
+            log.info("Processing subscription deactivation - subscriptionId: {}, reason: {}, period: {}",
+                    request.getSubscriptionId(), request.getReason(), request.getPeriod());
+
             Subscription subscription = subscriptionRepository.findBySubscriptionId(request.getSubscriptionId())
                     .orElse(null);
 
@@ -118,6 +146,9 @@ public class SubscriptionService {
                 response.setResponse(SubscriptionResponse.ResponseValue.FAIL_INVALID_SUBSCRIPTION);
                 return response;
             }
+
+            log.info("Found subscription: {} (status: {}, type: {})",
+                    subscription.getId(), subscription.getStatus(), subscription.getSubscriptionType());
 
             // 구독 상태 업데이트
             subscription.setStatus(Subscription.SubscriptionStatus.CANCELLED);
@@ -133,6 +164,7 @@ public class SubscriptionService {
                     license.setAssignedAt(null);
                 });
                 licenseRepository.saveAll(licenses);
+                log.info("Unassigned {} licenses for cancelled subscription", licenses.size());
             }
 
             response.setResponse(SubscriptionResponse.ResponseValue.OK);
@@ -140,7 +172,7 @@ public class SubscriptionService {
                     request.getSubscriptionId(), request.getReason());
 
         } catch (Exception e) {
-            log.error("Error deactivating subscription", e);
+            log.error("Error deactivating subscription: " + request.getSubscriptionId(), e);
             response.setResponse(SubscriptionResponse.ResponseValue.FAIL_OTHER);
         }
 
@@ -154,10 +186,14 @@ public class SubscriptionService {
         SubscriptionGetResponse response = new SubscriptionGetResponse();
 
         try {
+            log.info("Processing subscription get - subscriptionId: {}, userId: {}",
+                    request.getSubscriptionId(), request.getUserId());
+
             Subscription subscription = subscriptionRepository.findBySubscriptionId(request.getSubscriptionId())
                     .orElse(null);
 
             if (subscription == null) {
+                log.error("Subscription not found: {}", request.getSubscriptionId());
                 response.setResponse(SubscriptionGetResponse.ResponseValue.FAIL_INVALID_SUBSCRIPTION);
                 return response;
             }
@@ -180,7 +216,7 @@ public class SubscriptionService {
                     request.getSubscriptionId(), unassigned, assigned);
 
         } catch (Exception e) {
-            log.error("Error getting subscription", e);
+            log.error("Error getting subscription: " + request.getSubscriptionId(), e);
             response.setResponse(SubscriptionGetResponse.ResponseValue.FAIL_OTHER);
         }
 
@@ -194,10 +230,14 @@ public class SubscriptionService {
         SubscriptionResponse response = new SubscriptionResponse();
 
         try {
+            log.info("Processing subscription update - subscriptionId: {}, numberOfLicenses: {}, removeUnassigned: {}",
+                    request.getSubscriptionId(), request.getNumberOfLicenses(), request.getRemoveAllUnassignedLicenses());
+
             Subscription subscription = subscriptionRepository.findBySubscriptionId(request.getSubscriptionId())
                     .orElse(null);
 
             if (subscription == null) {
+                log.error("Subscription not found: {}", request.getSubscriptionId());
                 response.setResponse(SubscriptionResponse.ResponseValue.FAIL_INVALID_SUBSCRIPTION);
                 return response;
             }
@@ -246,11 +286,36 @@ public class SubscriptionService {
             response.setNumberOfUsedLicenses((int) assigned);
             response.setManagementURL(licenseManagementUrl + "?subscriptionId=" + subscription.getSubscriptionId());
 
+            log.info("Updated subscription: {} - unused: {}, used: {}",
+                    request.getSubscriptionId(), unassigned, assigned);
+
         } catch (Exception e) {
-            log.error("Error updating subscription", e);
+            log.error("Error updating subscription: " + request.getSubscriptionId(), e);
             response.setResponse(SubscriptionResponse.ResponseValue.FAIL_OTHER);
         }
 
         return response;
+    }
+
+    /**
+     * 사용자 검색 (amazonUserId 또는 email로)
+     */
+    private User findUserByIdOrEmail(String userIdOrEmail) {
+        // 먼저 amazonUserId로 검색
+        User user = userRepository.findByAmazonUserId(userIdOrEmail).orElse(null);
+
+        // 없으면 이메일로 검색 (Amazon 테스트에서 이메일을 userId로 보낼 수 있음)
+        if (user == null && userIdOrEmail.contains("@")) {
+            user = userRepository.findByEmail(userIdOrEmail).orElse(null);
+
+            // 이메일로 찾았으면 amazonUserId 생성
+            if (user != null && user.getAmazonUserId() == null) {
+                user.setAmazonUserId(UUID.randomUUID().toString());
+                userRepository.save(user);
+                log.info("Generated amazonUserId for user: {}", userIdOrEmail);
+            }
+        }
+
+        return user;
     }
 }

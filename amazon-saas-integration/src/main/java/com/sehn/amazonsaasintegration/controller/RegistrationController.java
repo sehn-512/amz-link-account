@@ -1,16 +1,20 @@
 package com.sehn.amazonsaasintegration.controller;
 
-
 import com.sehn.amazonsaasintegration.entity.User;
 import com.sehn.amazonsaasintegration.repository.UserRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +30,27 @@ public class RegistrationController {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    /**
+     * Registration Challenge
+     * Amazon Developer Portal 테스트용
+     */
+    @GetMapping("/amazonregistrationchallenge")
+    @ResponseBody
+    public ResponseEntity<String> getRegistrationChallenge() {
+        try {
+            ClassPathResource resource = new ClassPathResource("challenges/amazonregistrationchallenge");
+            String content = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+            log.info("Served registration challenge");
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(content);
+        } catch (IOException e) {
+            log.error("Error reading registration challenge file", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     /**
      * 회원가입/로그인 페이지 표시
