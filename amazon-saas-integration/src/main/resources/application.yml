@@ -37,6 +37,14 @@ amazon:
     # 라이센스 관리 페이지 URL (실제 배포 도메인으로 변경 필요)
     license-management-url: https://yourdomain.com/licenses
 
+    # Valid Product IDs (실제 환경에서는 데이터베이스나 외부 설정에서 관리)
+    valid-product-ids:
+      - Product-Id
+      - product_A
+      - product_B
+      - SaaS-Product-Basic
+      - SaaS-Product-Premium
+
 # Logging
 logging:
   level:

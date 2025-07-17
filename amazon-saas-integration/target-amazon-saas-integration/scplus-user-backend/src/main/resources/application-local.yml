@@ -1,0 +1,37 @@
+spring:
+  profiles: local
+  
+server:
+  port: 8081
+
+scplus:
+    channel: CEPOS
+    company: C310
+    username: CEPOS
+    password: ENC(Pqn1JPY9hPVHB+8I7/7rYuc2GPnWpa7O)
+    legacyusername: 47
+    legacypassword: ENC(cGvmDYz/eC0vJnh1i7iScWkSyHu49ION)
+    baseUrl: http://localhost:8090
+    amazonCheckUserURL: /v1/amazon/check-user
+    amazonFulfillmentURL: /v1/amazon/fulfillment
+    channelSigninURL: /v1/channel/signin
+
+cepos:
+  targetSystem: CONSUMER
+  username: CONSUMER
+  password: ENC(z9CSjzcv546xx0Brl30JDErUS03bV9ex)
+  baseURL: http://localhost:8091/
+  
+cs:
+  authenticationType: http_signature
+  merchantID: seascplus
+  merchantKeyIdSignature: ENC(ypspJwfqqUwu4aWeGP4f1HL6glkSmdtea2x4Rf7TGHCxQsEnb7zVBy8mIVOe5Kq0)
+  merchantsecretKeyDigest: ENC(ML/5E2DkbCZskeScfCBQi+dgzXG9qrG/v39F8ipTPniqwvwRhwCMofyhpaWnx4PyBr6YZyJ7VDQ=)
+  baseURL: https://apitest.cybersource.com/
+  paymentURL: pts/v2/payments
+  cancelURL: pts/v2/captures/tmpid/voids
+  host: apitest.cybersource.com
+  
+email:
+  error:
+      to: 'heetaek.k@partner.samsung.com'

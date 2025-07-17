@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- BSP welcome email Templete2 Revised version -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>${title}</title>
+</head>
+
+<body style="margin: 0; padding: 0;">
+    <table border="0" align="center" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; background: #f3f3f3;">
+        <tr>
+            <td style="font-family:'samsungone400', Helvetica, Arial, sans-serif; font-weight:400; font-size:15px; line-height:24px; color:#000000; padding: 65px 37px 17px 37px;">
+                <!-- MAIL TEMPLATE -->
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="817" style="border-collapse: collapse; background: #ffffff;">
+                    <tr>
+                        <td style="padding: 30px; border-top: 3px solid; border-top: 3px solid #1428a0;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                <tr>
+                                    <td style="padding: 20px 0 20px 0;">
+                                        <!-- MAIL TOP -->
+                                        <a href="${domainAddress}" target="_blank"><img src="https://www.samsungcareplus.com/resources/image/v4/scp_dm_logo.gif" alt="SAMSUNG Care+"></a>
+                                    </td>
+                                    <!-- //MAIL TOP -->
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <!-- MAIL CONTENTS -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                            <tr>
+                                                <td style="font-family:'samsungone600', Helvetica, Arial, sans-serif; padding: 30px 0 30px 30px; font-weight:600; font-size: 24px; background: #e7f2ff; border-radius: 25px 0 25px 0; color:#1428a0">
+                                                    <!-- CONTENTS TOP -->
+                                                    Cancellation request update
+                                                    <!-- //CONTENTS TOP -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 35px 20px 25px 20px;">
+                                                    <!-- CONTENTS MID -->
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                                        <tr>
+                                                            <td style="padding-bottom: 30px;">
+                                                                Dear ${customerName}, <br> We were able to successfully cancel the requested items from your order. <br>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="border-top: 2px #0381fe solid; border-bottom: 1px #0381fe solid; padding: 20px 0px 5px 0;">
+                                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                                                    <tr>
+                                                                        <td colspan="2" style="letter-spacing: 1px;  font-weight: bold; padding-bottom: 10px;padding-left:20px; color: #1428a0;">
+                                                                            CANCELLED ITEM(S)
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2" style="color: #0381fe; font-weight:bold; background: #e7f2ff; padding: 10px 20px; border-radius:7px;">
+                                                                            ${product}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="border-bottom:1px solid #ddd; padding: 12px 20px 7px 20px;">
+                                                                            QTY
+                                                                        </td>
+                                                                        <td align="right" style="border-bottom:1px solid #ddd; padding: 7px 20px;">
+                                                                            1
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="padding: 12px 20px 7px 20px;">
+                                                                            PRICE
+                                                                        </td>
+                                                                        <td align="right" style="padding: 7px 20px;">
+                                                                            ${currency} ${amountRefunded}
+                                                                            <br> (applicable tax included)
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+
+
+                                                    </table>
+                                                    <!-- //CONTENTS MID -->
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!-- //MAIL CONTENTS -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 40px 25px 40px;">
+                                        <!-- MAIL FOOTER -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; color:#666;">
+                                            <tr>
+                                                <td style="font-size: 14px; padding-bottom: 25px;">
+                                                    Please do not reply to this email. If you have any question? Samsung Care+ is ready to provide an assist.<br> Visit <a href="${domainAddress}" style="font-weight: bold; color: #1428a0; border-bottom: 1px #1428a0 solid; text-decoration: none;" target="_blank">Customer Service</a> or call us at
+                                                    <a href="tel:1-866-371-9501" style="font-weight: bold; color: #1428a0; border-bottom: 1px #1428a0 solid; text-decoration: none;">1-866-371-9501</a> 24/7
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; padding-bottom: 25px;">
+                                                    &copy; 2020 Samsung Electronics America, Inc. Samsung is a registered trademark of Samsung Electronics Co., Ltd.<br> Use only in accordance with law. Other company and product names mentioned may be trademarks of their respective owners. Screen images simulated. Actual appearances may vary.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px;">
+                                                    Samsung Electronics America <br> 85 Challenger Road.<br> Ridgefield Park, NJ 07660
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <!-- //MAIL FOOTER -->
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+                <!-- //MAIL TEMPLATE -->
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="padding: 0 0 55px 0; font-family:'samsungone300', Helvetica, Arial, sans-serif; font-size:12px; line-height:16px; color:#555;">
+                &copy; SAMSUNG All Rights Reserved.
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

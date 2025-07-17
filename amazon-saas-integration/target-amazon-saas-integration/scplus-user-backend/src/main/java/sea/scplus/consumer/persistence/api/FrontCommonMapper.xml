@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="sea.scplus.consumer.persistence.api.FrontCommonMapper">
+
+	<resultMap type="sea.scplus.consumer.vo.ConsumerContactHistory" id="ContactHistoryMap">
+		<result column="contact_history_id" 	property="contact_history_id"/>
+		<result column="reference_code" 		property="reference_code"/>
+		<result column="contract_no" 			property="contract_no"/>
+		<result column="reason_type" 			property="reason_type"/>
+		<result column="request_path" 			property="request_path"/>
+		<result column="response_type" 			property="response_type"/>
+		<result column="send_date" 				property="send_date"/>
+		<result column="content" 				property="content"/>
+		<result column="file_id" 				property="file_id"/>
+		<result column="email" 					property="email"	typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler"/>
+		<result column="subject"				property="subject"/>
+	</resultMap>
+
+	<!-- Insert Consumer Contact History -->
+	<insert id="insertConsumerContactHistory" parameterType="sea.scplus.consumer.vo.ConsumerContactHistory" useGeneratedKeys="true" keyColumn="contact_history_id" keyProperty="contact_history_id">
+        <selectKey keyProperty="contact_history_id" resultType="String" order="BEFORE">
+                SELECT GET_CONTACT_HISTORY_ID() FROM DUAL
+        </selectKey>
+        INSERT INTO POS_CONSUMER_CONTACT_HISTORY (
+	         contact_history_id   
+			,reference_code    
+			,contract_no
+			,request_path              
+			,response_type
+			,reason_type          
+			,send_date  
+ 			,content 
+			,email
+			,subject
+			,file_id             
+        ) VALUES (
+	         #{contact_history_id}   
+			,#{reference_code}             
+			,#{contract_no}
+			,#{request_path}           
+			,#{response_type}
+			,#{reason_type}   
+			,SYSDATE
+ 			,#{content}               
+			,#{email,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler}
+			,#{subject}
+			,#{file_id}
+        )
+    </insert>
+
+	<insert id="insertConsumerContactHistoryWithoutDKMS"
+			parameterType="sea.scplus.consumer.vo.ConsumerContactHistory"
+			useGeneratedKeys="true"
+			keyColumn="contact_history_id" keyProperty="contact_history_id">
+		<selectKey keyProperty="contact_history_id" resultType="String" order="BEFORE">
+			SELECT GET_CONTACT_HISTORY_ID() FROM DUAL
+		</selectKey>
+		INSERT INTO POS_CONSUMER_CONTACT_HISTORY (
+		contact_history_id
+		,reference_code
+		,contract_no
+		,request_path
+		,response_type
+		,reason_type
+		,send_date
+		,content
+		,email
+		,subject
+		,file_id
+		) VALUES (
+		#{contact_history_id}
+		,#{reference_code}
+		,#{contract_no}
+		,#{request_path}
+		,#{response_type}
+		,#{reason_type}
+		,SYSDATE
+		,#{content}
+		,#{email}
+		,#{subject}
+		,#{file_id}
+		)
+	</insert>
+
+
+	<select id="selectContactHistory" parameterType="ConsumerContactHistory" resultMap="ContactHistoryMap">
+		SELECT CONTACT_HISTORY_ID,
+				REFERENCE_CODE,
+				REQUEST_PATH,
+				RESPONSE_TYPE,
+				REASON_TYPE,
+				TO_CHAR(SEND_DATE, 'MM/dd/yyyy HH24:mi:ss') AS SEND_DATE,
+				CONTENT,
+				FILE_ID,
+				EMAIL,
+				SUBJECT,
+				CONTRACT_NO
+			FROM POS_CONSUMER_CONTACT_HISTORY
+		   WHERE 1 = 1
+			 AND CONTRACT_NO = #{contract_no} 
+		
+	</select>
+</mapper>

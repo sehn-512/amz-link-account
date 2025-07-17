@@ -1,8 +1,10 @@
 package com.sehn.amazonsaasintegration.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubscriptionResponse {
     private String response;
     private Integer numberOfUnusedLicenses; // Team Subscription only

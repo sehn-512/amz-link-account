@@ -1,0 +1,49 @@
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:log4jdbc:oracle:thin:@105.1.11.181:1525:GSPNB
+    username: scplus
+    password: ENC(vU/RBNHkvBwqJLuskYffx3BEAZXdS7D4)
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  jwt:
+    secret: ENC(WWJMMHaRW+6rp/cwXJEXO9OYUjPcBGDVAsa5r/H9Ho3cb/ekTusZovYnqhjD2bs5EelDkgOA3TeFzPPndCFmPyU/g7N3CJFJRttOfLI9rXwVrZxH5cwp2K89QMgwFaVOobFhfhWQGctKSSCP1I//xNHG0e1DuxApkToW83u5XrcRl35jEsa+IngjM5HE07ck)
+  
+scplus:
+    channel: CEPOS
+    company: C310
+    username: CEPOS
+    password: ENC(n0gewxj1yG6OvXss33Mv+YDL2e80Yrwr)
+    legacyusername: 91
+    legacypassword: ENC(cGvmDYz/eC0vJnh1i7iScWkSyHu49ION) 
+    baseUrl: https://scusapi.samsungsupport.com/
+
+cepos:
+  targetSystem: CONSUMER
+  username: CONSUMER
+  password: ENC(z9CSjzcv546xx0Brl30JDErUS03bV9ex)
+  baseURL: https://scppos.samsungsupport.com/api/
+  
+cs:
+  authenticationType: http_signature
+  merchantID: seascplus
+  merchantKeyIdSignature: ENC(ypspJwfqqUwu4aWeGP4f1HL6glkSmdtea2x4Rf7TGHCxQsEnb7zVBy8mIVOe5Kq0)
+  merchantsecretKeyDigest: ENC(ML/5E2DkbCZskeScfCBQi+dgzXG9qrG/v39F8ipTPniqwvwRhwCMofyhpaWnx4PyBr6YZyJ7VDQ=)
+  baseURL: https://api.cybersource.com/
+  host: api.cybersource.com    
+  
+domain:
+  protocol: https
+  name: scplus.samsungsupport.com
+  
+email:
+  error:
+      to: 'junpark@sea.samsung.com,danny.ko@sea.samsung.com,sung5.kim@sea.samsung.com,heetaek.k@partner.samsung.com,dong.k@partner.samsung.com,hyungrae.kim@samsung.com,jinkyu.j@partner.samsung.com'
+
+dkms:
+  task-id: 6E7:scus_encryption
+  service_running_on: idc
+  cache_duration_hours: 24
+  server:
+    url: https://global.sec-dkms.com/v1
+  cred:
+    path: /apps/scplusDomain/config/dkmsCredential.prod.json

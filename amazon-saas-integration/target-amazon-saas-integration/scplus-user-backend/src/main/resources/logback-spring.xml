@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+	<!-- File Appender -->
+	<property name="server" value="${spring.profiles.active}" />
+	<!-- log file path -->
+	<property name="LOG_PATH" value="C:/logs/cepos/consumer/" />
+	<property name="LOG_FILENAME" value="consumer.${server}.log" />
+
+	<springProfile name="local">
+		<property name="LOG_FILENAME" value="consumer.${server}.log" />
+
+		<appender name="LOG_FILENAME" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+	         <layout class="sea.scplus.consumer.common.util.MaskingPatternLayout">
+	         	<maskPattern>\"cxfirstname\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"cxlastname\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"customer\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"cxname\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"cxphoneno\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduserphoneno\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduserfirstname\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduserlastname\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"endusername\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduseraddress1\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduseraddress2\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"enduseremail\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"serialnumber\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"tpaserialnumber\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"cxphoneno\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	         	<maskPattern>\"serialno\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"imei\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"cxaddress1\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"cxaddress2\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"scpus_password\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"WSPassword\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"IV_SERIAL_NO\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"expirationYear\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"expirationMonth\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"securityCode\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+	            <maskPattern>\"number\\{0,1}\"\s*:\s*\\{0,1}\"(.*?)\"</maskPattern>
+
+	            <pattern>%-5p [%d{ISO8601,UTC}] [%thread] %c: %m%n%rootException</pattern>
+	         </layout>
+	      </encoder>
+	     </appender>
+
+	</springProfile>
+	<springProfile name="dev">
+		<property name="LOG_PATH" value="/serviceis/na/log/wls12.2/scplusDomain/applications/consumer/" />
+		<property name="LOG_FILENAME" value="consumer.${server}.log" />
+	</springProfile>
+	<springProfile name="prod">
+		<property name="LOG_PATH" value="/serviceis/na/log/wls12.2/scplusDomain/applications/consumer/" />
+		<property name="LOG_FILENAME" value="consumer.${server}.log" />
+	</springProfile>
+
+	<appender name="all"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}${LOG_FILENAME}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}consumer-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level]\(%file:%line\) %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="sea.scplus" level="debug" />
+	<logger name="sea.scplus.api.common.filter" level="warn"/>
+	<logger name="sea.scplus.api.persistence" level="warn"/>
+	<logger name="org.springframework" level="warn"/>
+
+	<logger name="jdbc" level="OFF"/>
+	<logger name="jdbc.sqlonly" level="OFF"/>
+	<logger name="jdbc.sqltiming" level="info"/>
+	<logger name="jdbc.resultsettable" level="info"/>
+	<logger name="jdbc.audit" level="OFF"/>
+	<logger name="jdbc.resultset" level="OFF"/>
+	<logger name="jdbc.connection" level="OFF"/>
+
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="all" />
+	</root>
+
+
+</configuration>

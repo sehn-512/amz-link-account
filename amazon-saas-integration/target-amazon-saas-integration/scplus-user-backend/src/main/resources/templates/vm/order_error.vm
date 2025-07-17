@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- BSP welcome email Templete2 Revised version -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>${title}</title>
+</head>
+
+<body style="margin: 0; padding: 0;">
+    <table border="0" align="center" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse; background: #f3f3f3;">
+        <tr>
+            <td style="font-family:'samsungone400',Segoe UI, Calibri, Helvetica, Arial, sans-serif; font-weight:400; font-size:15px; line-height:24px; color:#000000; padding: 65px 37px 17px 37px;">
+                <!-- MAIL TEMPLATE -->
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="817" style="border-collapse: collapse; background: #ffffff;">
+                    <tr>
+                        <td style="padding: 30px; border-top: 3px solid; border-top: 3px solid #1428a0;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                <tr>
+                                    <td>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                            <tr>
+                                                <td style="letter-spacing: 1px;  font-weight: bold; padding-bottom: 10px;padding-left:20px; color: #1428a0;">
+                                                    <p>Orders with missing referenced contract or I/F transaction have been found.</p>
+<p>Please investigate root cause and then trigger registration API again or make refund cancel.</p>
+<p>Orders with missing referenced contract or I/F transaction: Orders that policy activation were not completed due to unexpected error after payment capture.</p>
+<p>This report can only be detected for SC+ CE Portal channel.</p>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table border="1" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+                                            <tr>
+                                                <td style="letter-spacing: 1px;  font-weight: bold; padding-bottom: 10px;padding-left:20px; color: #1428a0;">
+                                                    Order Item Identification</td>
+                                                <td style="letter-spacing: 1px;  font-weight: bold; padding-bottom: 10px;padding-left:20px; color: #1428a0;">
+                                                    Cyber Source Reference</td>
+                                                <td style="letter-spacing: 1px;  font-weight: bold; padding-bottom: 10px;padding-left:20px; color: #1428a0;">
+                                                    Payment Date(EST)</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #0381fe; font-weight:bold; background: #e7f2ff; padding: 10px 20px; border-radius:7px;">
+                                                    ${OrderItemId}
+                                                </td>
+                                                <td style="color: #0381fe; font-weight:bold; background: #e7f2ff; padding: 10px 20px; border-radius:7px;">
+                                                    ${referenceNo}
+                                                </td>
+                                                <td style="color: #0381fe; font-weight:bold; background: #e7f2ff; padding: 10px 20px; border-radius:7px;">
+                                                    ${errorDate}
+                                                </td>
+                                            </tr>
+                                            
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+                <!-- //MAIL TEMPLATE -->
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="sea.scplus.consumer.persistence.api.RESTCommonMapper">
+
+
+	<select id="getReferenceId" resultType="String">
+		<![CDATA[
+			SELECT GET_REFERENCE_ID() FROM DUAL
+ 		]]>
+	</select>
+
+	<select id="getOrderId" resultType="String">
+		<![CDATA[
+			SELECT GET_ORDER_ID() FROM DUAL
+ 		]]>
+	</select>
+	
+	<select id="getEmailHookId" resultType="String">
+		<![CDATA[
+			SELECT GET_EMAIL_HOOK_ID() FROM DUAL
+ 		]]>
+	</select>
+	
+	<resultMap type="sea.scplus.consumer.vo.order.CreateOrder" id="createOrder">
+	    <result column="cancel_order_id" property="cancel_order_id"/>
+	    <result column="cancel_order_date" property="cancel_order_date"/>
+	    <result column="order_id" property="order_id"/>
+        <result column="order_date" property="order_date"/>
+        <result column="contract_no" property="contract_no"/>
+        <result column="scpus_ret_cd" property="scpus_ret_cd"/>
+        <result column="scpus_ret_message" property="scpus_ret_message"/>
+        <result column="pay_date" property="pay_date"/>
+        <result column="unit_price" property="unit_price"/>
+        <result column="total_price" property="total_price"/>
+        <result column="tax_rate" property="tax_rate"/>
+        <result column="tax_amount" property="tax_amount"/>
+        <result column="payment_type" property="payment_type"/>
+        <result column="payment_status" property="payment_status"/>
+        <result column="contract_start_date" property="contract_start_date"/>
+        <result column="contract_end_date" property="contract_end_date"/>
+        <result column="order_reference_code" property="order_reference_code"/>
+        <result column="cs_id" property="cs_id"/>
+        <result column="cs_approval_code" property="cs_approval_code"/>
+        <result column="cs_network_transaction_id" property="cs_network_transaction_id"/>
+        <result column="cs_transaction_id" property="cs_transaction_id"/>
+        <result column="cs_response_code" property="cs_response_code"/>
+        <result column="cs_status" property="cs_status"/>
+        <result column="cs_submit_time_utc" property="cs_submit_time_utc"/>
+        <result column="pos_ret_cd" property="pos_ret_cd"/>
+        <result column="pos_ret_message" property="pos_ret_message"/>
+        <result column="first_name" property="first_name" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler"/>
+        <result column="last_name" property="last_name" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler"/>
+        <result column="email" property="email" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler"/>
+        <result column="sales_order_number" property="sales_order_number"/>
+        <result column="billing_order_number" property="billing_order_number"/>
+        <result column="ecommerce" property="ecommerce"/>
+        <result column="recon" property="recon"/>
+        <result column="card_type" property="card_type"/>
+        <result column="address" property="address" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler"/>
+        <result column="state" property="state"/>
+        <result column="zip_code" property="zip_code"/>
+        <result column="city" property="city"/>
+	    <collection property="orderItem" resultMap="TypeOrderItem" ofType="sea.scplus.consumer.vo.order.CreateOrderItem" javaType="java.util.ArrayList"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.order.CreateOrderItem" id="TypeOrderItem">
+	    <result column="child_order_id" property="order_id"/>
+        <result column="order_item_id" property="order_item_id"/>
+        <result column="cancel_order_item_id" property="cancel_order_item_id"/>
+        <result column="child_cancel_order_id" property="cancel_order_id"/>
+        <result column="serial_number" property="serial_number"/>
+        <result column="model_cd" property="model_cd"/>
+        <result column="sku" property="sku"/>
+        <result column="svcpacksku" property="svcpacksku"/>
+        <result column="quantity" property="quantity"/>
+        <result column="unit_price_item" property="unit_price"/>
+        <result column="total_price_item" property="total_price"/>
+        <result column="tax_rate_item" property="tax_rate"/>
+        <result column="tax_amount_item" property="tax_amount"/>
+	</resultMap>
+	
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPayment" id="paymentInfo">
+		<collection property="clientReferenceInformation" resultMap="TypePaymentClientReferenceInformation" ofType="sea.scplus.consumer.vo.payment.RequestPaymentClientReferenceInformation" />
+		<collection property="paymentInformation" resultMap="TypePaymentPaymentInformation" ofType="sea.scplus.consumer.vo.payment.RequestPaymentPaymentInformation" />
+		<collection property="orderInformation" resultMap="TypePaymentOrderInformation" ofType="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformation" />
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentClientReferenceInformation" id="TypePaymentClientReferenceInformation">
+	    <result column="code" property="code"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentPaymentInformation" id="TypePaymentPaymentInformation">
+	    <collection property="card" resultMap="TypePaymentPaymentInformationCard" ofType="sea.scplus.consumer.vo.payment.RequestPaymentPaymentInformationCard" />
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentPaymentInformationCard" id="TypePaymentPaymentInformationCard">
+	    <result column="CARD_NUMBER" property="number"/>
+<!-- 	    <result column="SECURITY_CODE" property="securityCode"/> -->
+	    <result column="EXPIRATION_MONTH" property="expirationMonth"/>
+	    <result column="EXPIRATION_YEAR" property="expirationYear"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformation" id="TypePaymentOrderInformation">
+	    <collection property="amountDetails" resultMap="TypePaymentOrderInformationAmountDetails" ofType="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationAmountDetails" />
+	    <collection property="billTo" resultMap="TypePaymentOrderInformationBillTo" ofType="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationBillTo" />
+	    <collection property="lineItems" resultMap="TypeLineItem" ofType="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationLineItems" javaType="java.util.ArrayList"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationAmountDetails" id="TypePaymentOrderInformationAmountDetails">
+	    <result column="TOTAL_AMOUNT" property="totalAmount"/>
+	    <result column="CURRENCY" property="currency"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationBillTo" id="TypePaymentOrderInformationBillTo">
+	    <result column="FIRST_NAME" property="firstName" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler"/>
+	    <result column="LAST_NAME" property="lastName" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler"/>
+	    <result column="ADDRESS1" property="address1" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler"/>
+	    <result column="ADDRESS2" property="address2" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler"/>
+	    <result column="LOCALITY" property="locality"/>
+	    <result column="ADMINISTRATIVE_AREA" property="administrativeArea"/>
+	    <result column="POSTAL_CODE" property="postalCode"/>
+	    <result column="COUNTRY" property="country"/>
+	    <result column="EMAIL" property="email" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler"/>
+	    <result column="PHONE_NUMBER" property="phoneNumber" typeHandler="com.samsung.dkms.mybatis.typehandler.DkmsPhoneNumberTypeHandler"/>
+	</resultMap>
+	
+	<resultMap type="sea.scplus.consumer.vo.payment.RequestPaymentOrderInformationLineItems" id="TypeLineItem">
+        <result column="serial_number" property="productCode"/>
+        <result column="model_cd" property="productName"/>
+        <result column="sku" property="productSku"/>
+        <result column="quantity" property="quantity"/>
+        <result column="unit_price_item" property="unitPrice"/>
+        <result column="total_price_item" property="totalAmount"/>
+        <result column="tax_rate_item" property="taxRate"/>
+        <result column="tax_amount_item" property="taxAmount"/>
+	</resultMap>
+	
+	<select id="getPaymentInfo" resultMap="paymentInfo" parameterType="String">
+	      select A.ORDER_ID
+                ,B.CODE
+                ,C.CARD_NUMBER
+                ,C.SECURITY_CODE
+                ,C.EXPIRATION_MONTH 
+                ,C.EXPIRATION_YEAR
+                ,D.TOTAL_AMOUNT
+                ,D.CURRENCY
+                ,E.FIRST_NAME
+                ,E.LAST_NAME
+                ,E.ADDRESS1
+                ,E.ADDRESS2
+                ,E.LOCALITY
+                ,E.ADMINISTRATIVE_AREA
+                ,E.POSTAL_CODE
+                ,E.COUNTRY
+                ,E.EMAIL
+                ,E.PHONE_NUMBER
+				,F.serial_number
+				,F.model_cd
+				,F.sku
+				,F.quantity
+				,F.unit_price as unit_price_item
+				,F.total_price as total_price_item
+				,F.tax_amount as tax_amount_item
+				,F.tax_rate as tax_rate_item
+            from POS_PAYMENT A LEFT OUTER JOIN POS_PAYMENT_CLIENT B
+                    ON A.ORDER_ID = B.ORDER_ID
+                LEFT OUTER JOIN POS_PAYMENT_PAYMENT_CARD C
+                    ON A.ORDER_ID = C.ORDER_ID
+                LEFT OUTER JOIN POS_PAYMENT_ORDER_AMOUNT D
+                    ON A.ORDER_ID = D.ORDER_ID
+		        LEFT OUTER JOIN POS_PAYMENT_ORDER_BILLTO E
+                    ON A.ORDER_ID = E.ORDER_ID
+                LEFT OUTER JOIN POS_ORDER_DETAIL F
+		            ON A.ORDER_ID = F.ORDER_ID
+            WHERE A.ORDER_ID = #{orderId}
+	</select>
+	
+	<select id="getOrderInfo" resultMap="createOrder" parameterType="String">
+		SELECT 	a.order_id       
+				,a.order_date
+				,a.contract_no
+				,a.scpus_ret_cd
+				,a.scpus_ret_message
+				,a.pay_date
+				,a.unit_price
+				,a.total_price
+				,a.tax_rate
+				,a.tax_amount
+				,a.payment_type
+				,a.payment_status
+				,a.contract_start_date
+				,a.contract_end_date
+				,a.order_reference_code
+				,a.cs_id
+				,a.cs_approval_code
+				,a.cs_network_transaction_id
+				,a.cs_transaction_id
+				,a.cs_response_code
+				,a.cs_status
+				,a.cs_submit_time_utc
+				,a.pos_ret_cd
+				,a.pos_ret_message
+				,a.first_name
+				,a.last_name
+				,a.email
+				,a.sales_order_number
+				,a.billing_order_number
+				,a.ecommerce
+				,a.recon
+				,a.card_type
+				,a.address
+				,a.state
+				,a.city
+				,a.zip_code
+				,b.order_item_id
+				,b.order_id as child_order_id
+				,b.serial_number
+				,b.model_cd
+				,b.sku
+				,b.svcpacksku
+				,b.quantity
+				,b.unit_price as unit_price_item
+				,b.total_price as total_price_item
+				,b.tax_amount as tax_amount_item
+				,b.tax_rate as tax_rate_item
+		FROM POS_ORDER_MASTER A LEFT OUTER JOIN POS_ORDER_DETAIL B
+		         ON A.ORDER_ID = B.ORDER_ID 
+		WHERE A.CONTRACT_NO = #{contractNo}
+	</select>
+	
+	<select id="getOrderInfoBySerialNo" resultType="int" parameterType="String">
+		SELECT 	count(*)
+		  FROM POS_ORDER_MASTER A LEFT OUTER JOIN POS_ORDER_DETAIL B
+		         ON A.ORDER_ID = B.ORDER_ID 
+		 WHERE b.serial_number = #{serialNo}
+		   AND ( a.cs_ret_cd IN ( '600' ) or a.CS_APPROVAL_CODE is not null )
+	</select>
+	
+	<select id="getCancelOrderInfo" resultMap="createOrder" parameterType="String">
+		SELECT 	a.cancel_order_id
+				,a.order_id       
+				,a.contract_no
+				,a.scpus_ret_cd
+				,a.scpus_ret_message
+				,a.order_reference_code
+				,a.cs_id
+				,a.cs_status
+				,a.cs_submit_time_utc
+				,a.pos_ret_cd
+				,a.pos_ret_message
+				,a.sales_order_number
+				,a.billing_order_number
+				,a.recon
+				,b.order_item_id
+				,b.order_id as child_order_id
+				,b.cancel_order_id as child_cancel_order_id
+				,b.cancel_order_item_id
+				,b.serial_number
+				,b.model_cd
+				,b.sku
+				,b.svcpacksku
+				,b.quantity
+				,b.unit_price as unit_price_item
+				,b.total_price as total_price_item
+				,b.tax_amount as tax_amount_item
+				,b.tax_rate as tax_rate_item
+		FROM POS_CANCEL_ORDER_MASTER A LEFT OUTER JOIN POS_CANCEL_ORDER_DETAIL B
+		         ON A.cancel_order_id = B.cancel_order_id 
+		WHERE A.CONTRACT_NO = #{contractNo}
+        ORDER BY A.CANCEL_ORDER_ID DESC
+	</select>
+	
+	
+	<!-- insertPaymentInfo -->
+	<insert id="insertPaymentInfo" parameterType="sea.scplus.consumer.vo.payment.RequestPayment">
+        
+        INSERT ALL INTO POS_PAYMENT (
+				 ORDER_ID      
+			) VALUES (
+			     #{orderId}      
+			)
+        
+            <if test="clientReferenceInformation != null">
+                    INTO POS_PAYMENT_CLIENT ( ORDER_ID, CODE)
+                    VALUES (
+	                     #{orderId, jdbcType=VARCHAR}
+	                    ,#{clientReferenceInformation.code, jdbcType=VARCHAR}
+                    )
+            </if>
+            <if test="processingInformation != null">
+                    INTO POS_PAYMENT_PROCESS ( ORDER_ID, CAPTURE, COMMERCE_INDICATOR)
+                    VALUES (
+	                     #{orderId, jdbcType=VARCHAR}
+	                    ,#{processingInformation.capture, jdbcType=VARCHAR}
+	                    ,#{processingInformation.commerceIndicator, jdbcType=VARCHAR}
+                    )
+            </if>
+            <if test="paymentInformation != null">
+                    INTO POS_PAYMENT_PAYMENT ( ORDER_ID)
+                    VALUES (
+	                     #{orderId, jdbcType=VARCHAR}
+                    )
+                    
+                    <if test="paymentInformation.card != null">
+		                    INTO POS_PAYMENT_PAYMENT_CARD ( ORDER_ID, CARD_NUMBER, SECURITY_CODE, EXPIRATION_MONTH, EXPIRATION_YEAR)
+		                    VALUES (
+			                     #{orderId, jdbcType=VARCHAR}
+			                     ,#{paymentInformation.card.number, jdbcType=VARCHAR}
+			                     ,#{paymentInformation.card.securityCode, jdbcType=VARCHAR}
+			                     ,#{paymentInformation.card.expirationMonth, jdbcType=VARCHAR}
+			                     ,#{paymentInformation.card.expirationYear, jdbcType=VARCHAR}
+		                    )
+		            </if>
+            </if>
+            <if test="orderInformation != null">
+                    INTO POS_PAYMENT_ORDER ( ORDER_ID)
+                    VALUES (
+	                     #{orderId, jdbcType=VARCHAR}
+                    )
+                    
+                    <if test="orderInformation.amountDetails != null">
+		                    INTO POS_PAYMENT_ORDER_AMOUNT ( ORDER_ID, TOTAL_AMOUNT, CURRENCY)
+		                    VALUES (
+			                     #{orderId, jdbcType=VARCHAR}
+			                     ,#{orderInformation.amountDetails.totalAmount, jdbcType=VARCHAR}
+			                     ,#{orderInformation.amountDetails.currency, jdbcType=VARCHAR}
+		                    )
+		            </if>
+		            <if test="orderInformation.billTo != null">
+		                    INTO POS_PAYMENT_ORDER_BILLTO ( ORDER_ID, FIRST_NAME, LAST_NAME, ADDRESS1, ADDRESS2, LOCALITY, ADMINISTRATIVE_AREA, POSTAL_CODE, COUNTRY, EMAIL, PHONE_NUMBER)
+		                    VALUES (
+			                     #{orderId, jdbcType=VARCHAR}
+			                     ,#{orderInformation.billTo.firstName, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			                     ,#{orderInformation.billTo.lastName, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			                     ,#{orderInformation.billTo.address1, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler}
+			                     ,#{orderInformation.billTo.address2, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler}
+			                     ,#{orderInformation.billTo.locality, jdbcType=VARCHAR}
+			                     ,#{orderInformation.billTo.administrativeArea, jdbcType=VARCHAR}
+			                     ,#{orderInformation.billTo.postalCode, jdbcType=VARCHAR}
+			                     ,#{orderInformation.billTo.country, jdbcType=VARCHAR}
+			                     ,#{orderInformation.billTo.email, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler}
+			                     ,#{orderInformation.billTo.phoneNumber, jdbcType=VARCHAR,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsPhoneNumberTypeHandler}
+		                    )
+		            </if>
+		            <if test="orderInformation.lineItems != null">
+		            	<foreach collection="orderInformation.lineItems" item="item">
+		                    INTO POS_PAYMENT_ORDER_LINEITEM ( ORDER_ID, PRODUCT_SKU, PRODUCT_CODE, PRODUCT_NAME, PRODUCT_DESCRIPTION, QUANTITY, UNIT_PRICE, TOTAL_PRICE, TAX_AMOUNT, TAX_RATE)
+		                    VALUES (
+			                     #{orderId, jdbcType=VARCHAR}
+			                     ,#{item.productSku, jdbcType=VARCHAR}
+			                     ,#{item.productCode, jdbcType=VARCHAR}
+			                     ,#{item.productName, jdbcType=VARCHAR}
+			                     ,#{item.productDescription, jdbcType=VARCHAR}
+			                     ,#{item.quantity, jdbcType=VARCHAR}
+			                     ,#{item.unitPrice, jdbcType=VARCHAR}
+			                     ,#{item.totalAmount, jdbcType=VARCHAR}
+			                     ,#{item.taxAmount, jdbcType=VARCHAR}
+			                     ,#{item.taxRate, jdbcType=VARCHAR}
+		                    )
+		                </foreach>
+		            </if>
+            </if>
+        
+        SELECT 1 FROM DUAL
+    </insert>
+
+	<insert id="insertPaymentInfoWithoutDKMS" parameterType="sea.scplus.consumer.vo.payment.RequestPayment">
+
+		INSERT ALL INTO POS_PAYMENT (
+		ORDER_ID
+		) VALUES (
+		#{orderId}
+		)
+
+		<if test="clientReferenceInformation != null">
+			INTO POS_PAYMENT_CLIENT ( ORDER_ID, CODE)
+			VALUES (
+			#{orderId, jdbcType=VARCHAR}
+			,#{clientReferenceInformation.code, jdbcType=VARCHAR}
+			)
+		</if>
+		<if test="processingInformation != null">
+			INTO POS_PAYMENT_PROCESS ( ORDER_ID, CAPTURE, COMMERCE_INDICATOR)
+			VALUES (
+			#{orderId, jdbcType=VARCHAR}
+			,#{processingInformation.capture, jdbcType=VARCHAR}
+			,#{processingInformation.commerceIndicator, jdbcType=VARCHAR}
+			)
+		</if>
+		<if test="paymentInformation != null">
+			INTO POS_PAYMENT_PAYMENT ( ORDER_ID)
+			VALUES (
+			#{orderId, jdbcType=VARCHAR}
+			)
+
+			<if test="paymentInformation.card != null">
+				INTO POS_PAYMENT_PAYMENT_CARD ( ORDER_ID, CARD_NUMBER, SECURITY_CODE, EXPIRATION_MONTH, EXPIRATION_YEAR)
+				VALUES (
+				#{orderId, jdbcType=VARCHAR}
+				,#{paymentInformation.card.number, jdbcType=VARCHAR}
+				,#{paymentInformation.card.securityCode, jdbcType=VARCHAR}
+				,#{paymentInformation.card.expirationMonth, jdbcType=VARCHAR}
+				,#{paymentInformation.card.expirationYear, jdbcType=VARCHAR}
+				)
+			</if>
+		</if>
+		<if test="orderInformation != null">
+			INTO POS_PAYMENT_ORDER ( ORDER_ID)
+			VALUES (
+			#{orderId, jdbcType=VARCHAR}
+			)
+
+			<if test="orderInformation.amountDetails != null">
+				INTO POS_PAYMENT_ORDER_AMOUNT ( ORDER_ID, TOTAL_AMOUNT, CURRENCY)
+				VALUES (
+				#{orderId, jdbcType=VARCHAR}
+				,#{orderInformation.amountDetails.totalAmount, jdbcType=VARCHAR}
+				,#{orderInformation.amountDetails.currency, jdbcType=VARCHAR}
+				)
+			</if>
+			<if test="orderInformation.billTo != null">
+				INTO POS_PAYMENT_ORDER_BILLTO ( ORDER_ID, FIRST_NAME, LAST_NAME, ADDRESS1, ADDRESS2, LOCALITY, ADMINISTRATIVE_AREA, POSTAL_CODE, COUNTRY, EMAIL, PHONE_NUMBER)
+				VALUES (
+				#{orderId, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.firstName, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.lastName, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.address1, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.address2, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.locality, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.administrativeArea, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.postalCode, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.country, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.email, jdbcType=VARCHAR}
+				,#{orderInformation.billTo.phoneNumber, jdbcType=VARCHAR}
+				)
+			</if>
+			<if test="orderInformation.lineItems != null">
+				<foreach collection="orderInformation.lineItems" item="item">
+					INTO POS_PAYMENT_ORDER_LINEITEM ( ORDER_ID, PRODUCT_SKU, PRODUCT_CODE, PRODUCT_NAME, PRODUCT_DESCRIPTION, QUANTITY, UNIT_PRICE, TOTAL_PRICE, TAX_AMOUNT, TAX_RATE)
+					VALUES (
+					#{orderId, jdbcType=VARCHAR}
+					,#{item.productSku, jdbcType=VARCHAR}
+					,#{item.productCode, jdbcType=VARCHAR}
+					,#{item.productName, jdbcType=VARCHAR}
+					,#{item.productDescription, jdbcType=VARCHAR}
+					,#{item.quantity, jdbcType=VARCHAR}
+					,#{item.unitPrice, jdbcType=VARCHAR}
+					,#{item.totalAmount, jdbcType=VARCHAR}
+					,#{item.taxAmount, jdbcType=VARCHAR}
+					,#{item.taxRate, jdbcType=VARCHAR}
+					)
+				</foreach>
+			</if>
+		</if>
+
+		SELECT 1 FROM DUAL
+	</insert>
+    
+    <!-- insertCreateContractInfo -->
+	<insert id="insertCreateContractInfo" parameterType="sea.scplus.consumer.vo.RequestContractCreate">
+        
+        INSERT ALL INTO POS_REQ_CONTRACT (
+				 ORDER_IDENTIFIER      
+				,ORDER_ITEM_IDENTIFIER  
+				,ACCOUNT_IDENTIFIER    
+				,ASSOCIATE_NAME        
+				,CONTRACT_START_DATE    
+				,CONTRACT_END_DATE      
+				,MOBILE               
+				,MOBILE_NUMBER         
+				,MODEL                
+				,ORDER_DATE            
+				,PURCHASE_DATE          
+				,RETAIL_ITEM_AMOUNT     
+				,SERIAL_NUMBER         
+				,SKU                  
+				,SPC_NET_PRICE          
+				,SPC_PAY_DATE           
+				,SPC_PAYMENT_STATUS     
+				,SPC_PAYMENT_TYPE       
+				,SPC_TAX_AMT            
+				,SPC_TAX_RATE           
+				,STORE_NAME            
+			) VALUES (
+			     #{orderIdentifier}      
+				,#{orderItemIdentifier}
+				,#{accountIdentifier}  
+				,#{associateName}   
+				,#{contractStartDate}
+				,#{contractEndDate}   
+				,#{mobile}
+				,#{mobileNumber,typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsPhoneNumberTypeHandler}
+				,#{model}                
+				,#{orderDate}            
+				,#{purchaseDate}          
+				,#{retailItemAmount}     
+				,#{serialNumber}         
+				,#{sku}                  
+				,#{spcNetPrice}          
+				,#{spcPayDate}           
+				,#{spcPaymentStatus}     
+				,#{spcPaymentType}       
+				,#{spcTaxAmt}            
+				,#{spcTaxRate}           
+				,#{storeName}
+			)
+        
+            <if test="customer != null">
+                    INTO POS_REQ_CONTRACT_CUSTOMER ( ADDRESS_TYPE, ORDER_IDENTIFIER, ADDRESS1, ADDRESS2, CITY, COUNTRY, EMAIL, FIRST_NAME, LAST_NAME, PHONE, STATE, ZIPCODE)
+                    VALUES (
+	                     #{customer.addressType, jdbcType=VARCHAR}
+	                    ,#{orderIdentifier, jdbcType=VARCHAR}
+	                    ,#{customer.address1, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler}
+	                    ,#{customer.address2, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler}
+	                    ,#{customer.city, jdbcType=VARCHAR}
+	                    ,#{customer.country, jdbcType=VARCHAR}
+	                    ,#{customer.email, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler}
+	                    ,#{customer.firstName, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+	                    ,#{customer.lastName, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+	                    ,#{customer.phone, jdbcType=VARCHAR, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsPhoneNumberTypeHandler}
+	                    ,#{customer.state, jdbcType=VARCHAR}
+	                    ,#{customer.zipcode, jdbcType=VARCHAR}
+                    )
+            </if>
+        
+        SELECT 1 FROM DUAL
+    </insert>
+
+	<insert id="insertCreateContractInfoWithoutDKMS" parameterType="sea.scplus.consumer.vo.RequestContractCreate">
+
+		INSERT ALL INTO POS_REQ_CONTRACT (
+		ORDER_IDENTIFIER
+		,ORDER_ITEM_IDENTIFIER
+		,ACCOUNT_IDENTIFIER
+		,ASSOCIATE_NAME
+		,CONTRACT_START_DATE
+		,CONTRACT_END_DATE
+		,MOBILE
+		,MOBILE_NUMBER
+		,MODEL
+		,ORDER_DATE
+		,PURCHASE_DATE
+		,RETAIL_ITEM_AMOUNT
+		,SERIAL_NUMBER
+		,SKU
+		,SPC_NET_PRICE
+		,SPC_PAY_DATE
+		,SPC_PAYMENT_STATUS
+		,SPC_PAYMENT_TYPE
+		,SPC_TAX_AMT
+		,SPC_TAX_RATE
+		,STORE_NAME
+		) VALUES (
+		#{orderIdentifier}
+		,#{orderItemIdentifier}
+		,#{accountIdentifier}
+		,#{associateName}
+		,#{contractStartDate}
+		,#{contractEndDate}
+		,#{mobile}
+		,#{mobileNumber}
+		,#{model}
+		,#{orderDate}
+		,#{purchaseDate}
+		,#{retailItemAmount}
+		,#{serialNumber}
+		,#{sku}
+		,#{spcNetPrice}
+		,#{spcPayDate}
+		,#{spcPaymentStatus}
+		,#{spcPaymentType}
+		,#{spcTaxAmt}
+		,#{spcTaxRate}
+		,#{storeName}
+		)
+
+		<if test="customer != null">
+			INTO POS_REQ_CONTRACT_CUSTOMER ( ADDRESS_TYPE, ORDER_IDENTIFIER, ADDRESS1, ADDRESS2, CITY, COUNTRY, EMAIL, FIRST_NAME, LAST_NAME, PHONE, STATE, ZIPCODE)
+			VALUES (
+			#{customer.addressType, jdbcType=VARCHAR}
+			,#{orderIdentifier, jdbcType=VARCHAR}
+			,#{customer.address1, jdbcType=VARCHAR}
+			,#{customer.address2, jdbcType=VARCHAR}
+			,#{customer.city, jdbcType=VARCHAR}
+			,#{customer.country, jdbcType=VARCHAR}
+			,#{customer.email, jdbcType=VARCHAR}
+			,#{customer.firstName, jdbcType=VARCHAR}
+			,#{customer.lastName, jdbcType=VARCHAR}
+			,#{customer.phone, jdbcType=VARCHAR}
+			,#{customer.state, jdbcType=VARCHAR}
+			,#{customer.zipcode, jdbcType=VARCHAR}
+			)
+		</if>
+
+		SELECT 1 FROM DUAL
+	</insert>
+    
+	<!-- update Order info -->
+	<update id="updateCreateOrder" parameterType="sea.scplus.consumer.vo.order.CreateOrder">
+	UPDATE POS_ORDER_MASTER SET 
+	       CREATE_DATE = SYSDATE
+		<if test="cs_id != '' and cs_id != null">
+			, CS_ID = #{cs_id}
+		</if>
+		<if test="cs_status != '' and cs_status != null">
+			, CS_STATUS = #{cs_status}
+		</if>
+		<if test="cs_submit_time_utc != '' and cs_submit_time_utc != null">
+			, CS_SUBMIT_TIME_UTC = #{cs_submit_time_utc}
+		</if>
+		<if test="cs_response_code != '' and cs_response_code != null">
+			, CS_RESPONSE_CODE = #{cs_response_code}
+		</if>
+		<if test="pos_ret_cd != '' and pos_ret_cd != null">
+			, POS_RET_CD = #{pos_ret_cd}
+		</if>
+		<if test="pos_ret_message != '' and pos_ret_message != null">
+			, POS_RET_MESSAGE = #{pos_ret_message}
+		</if>
+		<if test="sales_order_number != '' and sales_order_number != null">
+			, SALES_ORDER_NUMBER = #{sales_order_number}
+		</if>
+		<if test="billing_order_number != '' and billing_order_number != null">
+			, BILLING_ORDER_NUMBER = #{billing_order_number}
+		</if>
+		<if test="ecommerce != '' and ecommerce != null">
+			, ECOMMERCE = #{ecommerce}
+		</if>
+		<if test="recon != '' and recon != null">
+			, RECON = #{recon}
+		</if>
+		<if test="card_type != '' and card_type != null">
+			, CARD_TYPE = #{card_type}
+		</if>
+		<if test="scpus_ret_cd != '' and scpus_ret_cd != null">
+			, SCPUS_RET_CD = #{scpus_ret_cd}
+		</if>
+		<if test="scpus_ret_message != '' and scpus_ret_message != null">
+			, SCPUS_RET_MESSAGE = #{scpus_ret_message}
+		</if>
+		<if test="cs_approval_code != '' and cs_approval_code != null">
+			, CS_APPROVAL_CODE = #{cs_approval_code}
+		</if>
+		<if test="cs_network_transaction_id != '' and cs_network_transaction_id != null">
+			, CS_NETWORK_TRANSACTION_ID = #{cs_network_transaction_id}
+		</if>
+		<if test="cs_transaction_id != '' and cs_transaction_id != null">
+			, CS_TRANSACTION_ID = #{cs_transaction_id}
+		</if>
+		<if test="contract_no != '' and contract_no != null">
+			, CONTRACT_NO = #{contract_no}
+		</if>
+	WHERE ORDER_ID = #{order_id}
+	</update>
+	
+	<!-- Insert Order info -->
+	<insert id="insertCreateOrder" parameterType="sea.scplus.consumer.vo.order.CreateOrder">
+        
+        INSERT ALL
+        INTO POS_ORDER_MASTER ( 
+             ORDER_ID       
+			,ORDER_DATE
+			,CONTRACT_NO
+			,SCPUS_RET_CD
+			,SCPUS_RET_MESSAGE
+			,PAY_DATE
+			,UNIT_PRICE
+			,TOTAL_PRICE
+			,TAX_RATE
+			,TAX_AMOUNT
+			,PAYMENT_TYPE
+			,PAYMENT_STATUS
+			,CONTRACT_START_DATE
+			,CONTRACT_END_DATE
+			,ORDER_REFERENCE_CODE
+			,CS_ID
+			,CS_APPROVAL_CODE
+			,CS_NETWORK_TRANSACTION_ID
+			,CS_TRANSACTION_ID
+			,CS_RESPONSE_CODE
+			,CS_STATUS
+			,CS_SUBMIT_TIME_UTC
+			,POS_RET_CD
+			,POS_RET_MESSAGE
+			,EMAIL
+			,FIRST_NAME
+			,LAST_NAME
+			,SALES_ORDER_NUMBER
+			,BILLING_ORDER_NUMBER
+			,ECOMMERCE
+			,RECON
+			,CARD_TYPE
+			,ADDRESS
+			,STATE
+			,CITY
+			,ZIP_CODE
+		) VALUES (
+             #{order_id}       
+			,#{order_date}
+			,#{contract_no}
+			,#{scpus_ret_cd}
+			,#{scpus_ret_message}
+			,#{pay_date}
+			,#{unit_price}
+			,#{total_price}
+			,#{tax_rate}
+			,#{tax_amount}
+			,#{payment_type}
+			,#{payment_status}
+			,#{contract_start_date}
+			,#{contract_end_date}
+			,#{order_reference_code}
+			,#{cs_id}
+			,#{cs_approval_code}
+			,#{cs_network_transaction_id}
+			,#{cs_transaction_id}
+			,#{cs_response_code}
+			,#{cs_status}
+			,#{cs_submit_time_utc}
+			,#{pos_ret_cd}
+			,#{pos_ret_message}
+			,#{email, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler}
+			,#{first_name, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			,#{last_name, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			,#{sales_order_number}
+			,#{billing_order_number}
+			,#{ecommerce}
+			,#{recon}
+			,#{card_type}
+			,#{address, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsAddressTypeHandler}
+			,#{state}
+			,#{city}
+			,#{zip_code}
+        )
+        
+            <if test="orderItem != null">
+                <foreach collection="orderItem" item="item">
+                    INTO POS_ORDER_DETAIL ( ORDER_ITEM_ID, ORDER_ID, SERIAL_NUMBER, MODEL_CD, SKU, SVCPACKSKU, QUANTITY, UNIT_PRICE, TOTAL_PRICE, TAX_AMOUNT, TAX_RATE)
+                    VALUES (
+	                     #{item.order_item_id, jdbcType=VARCHAR}
+	                    ,#{order_id, jdbcType=VARCHAR}
+	                    ,#{item.serial_number, jdbcType=VARCHAR}
+	                    ,#{item.model_cd, jdbcType=VARCHAR}
+	                    ,#{item.sku, jdbcType=VARCHAR}
+	                    ,#{item.svcpacksku, jdbcType=VARCHAR}
+	                    ,#{item.quantity, jdbcType=INTEGER}
+	                    ,#{item.unit_price, jdbcType=DOUBLE}
+	                    ,#{item.total_price, jdbcType=DOUBLE}
+	                    ,#{item.tax_amount, jdbcType=DOUBLE}
+	                    ,#{item.tax_rate, jdbcType=DOUBLE}
+                    )
+                </foreach>
+                
+            </if>
+        
+        SELECT 1 FROM DUAL
+    </insert>
+
+	<insert id="insertCreateOrderWithoutDKMS" parameterType="sea.scplus.consumer.vo.order.CreateOrder">
+
+		INSERT ALL
+		INTO POS_ORDER_MASTER (
+		ORDER_ID
+		,ORDER_DATE
+		,CONTRACT_NO
+		,SCPUS_RET_CD
+		,SCPUS_RET_MESSAGE
+		,PAY_DATE
+		,UNIT_PRICE
+		,TOTAL_PRICE
+		,TAX_RATE
+		,TAX_AMOUNT
+		,PAYMENT_TYPE
+		,PAYMENT_STATUS
+		,CONTRACT_START_DATE
+		,CONTRACT_END_DATE
+		,ORDER_REFERENCE_CODE
+		,CS_ID
+		,CS_APPROVAL_CODE
+		,CS_NETWORK_TRANSACTION_ID
+		,CS_TRANSACTION_ID
+		,CS_RESPONSE_CODE
+		,CS_STATUS
+		,CS_SUBMIT_TIME_UTC
+		,POS_RET_CD
+		,POS_RET_MESSAGE
+		,EMAIL
+		,FIRST_NAME
+		,LAST_NAME
+		,SALES_ORDER_NUMBER
+		,BILLING_ORDER_NUMBER
+		,ECOMMERCE
+		,RECON
+		,CARD_TYPE
+		,ADDRESS
+		,STATE
+		,CITY
+		,ZIP_CODE
+		) VALUES (
+		#{order_id}
+		,#{order_date}
+		,#{contract_no}
+		,#{scpus_ret_cd}
+		,#{scpus_ret_message}
+		,#{pay_date}
+		,#{unit_price}
+		,#{total_price}
+		,#{tax_rate}
+		,#{tax_amount}
+		,#{payment_type}
+		,#{payment_status}
+		,#{contract_start_date}
+		,#{contract_end_date}
+		,#{order_reference_code}
+		,#{cs_id}
+		,#{cs_approval_code}
+		,#{cs_network_transaction_id}
+		,#{cs_transaction_id}
+		,#{cs_response_code}
+		,#{cs_status}
+		,#{cs_submit_time_utc}
+		,#{pos_ret_cd}
+		,#{pos_ret_message}
+		,#{email}
+		,#{first_name}
+		,#{last_name}
+		,#{sales_order_number}
+		,#{billing_order_number}
+		,#{ecommerce}
+		,#{recon}
+		,#{card_type}
+		,#{address}
+		,#{state}
+		,#{city}
+		,#{zip_code}
+		)
+
+		<if test="orderItem != null">
+			<foreach collection="orderItem" item="item">
+				INTO POS_ORDER_DETAIL ( ORDER_ITEM_ID, ORDER_ID, SERIAL_NUMBER, MODEL_CD, SKU, SVCPACKSKU, QUANTITY, UNIT_PRICE, TOTAL_PRICE, TAX_AMOUNT, TAX_RATE)
+				VALUES (
+				#{item.order_item_id, jdbcType=VARCHAR}
+				,#{order_id, jdbcType=VARCHAR}
+				,#{item.serial_number, jdbcType=VARCHAR}
+				,#{item.model_cd, jdbcType=VARCHAR}
+				,#{item.sku, jdbcType=VARCHAR}
+				,#{item.svcpacksku, jdbcType=VARCHAR}
+				,#{item.quantity, jdbcType=INTEGER}
+				,#{item.unit_price, jdbcType=DOUBLE}
+				,#{item.total_price, jdbcType=DOUBLE}
+				,#{item.tax_amount, jdbcType=DOUBLE}
+				,#{item.tax_rate, jdbcType=DOUBLE}
+				)
+			</foreach>
+
+		</if>
+
+		SELECT 1 FROM DUAL
+	</insert>
+
+
+	<!-- Insert Detail Ticket -->
+	<insert id="insertCancelOrder" parameterType="sea.scplus.consumer.vo.order.CreateOrder">
+        
+        INSERT ALL
+        INTO POS_CANCEL_ORDER_MASTER ( 
+             CANCEL_ORDER_ID       
+			,CANCEL_ORDER_DATE
+			,ORDER_ID  
+			,CONTRACT_NO
+			,SCPUS_RET_CD
+			,SCPUS_RET_MESSAGE
+			,TOTAL_PRICE
+			,ORDER_REFERENCE_CODE
+			,CS_ID
+			,CS_STATUS
+			,CS_SUBMIT_TIME_UTC
+			,POS_RET_CD
+			,POS_RET_MESSAGE
+			,EMAIL
+			,FIRST_NAME
+			,LAST_NAME
+			,SALES_ORDER_NUMBER
+			,BILLING_ORDER_NUMBER
+			,ECOMMERCE
+			,RECON
+			,CARD_TYPE
+			,CANCEL_TYPE
+		) VALUES (
+             #{cancel_order_id}       
+			,#{cancel_order_date}
+			,#{order_id}
+			,#{contract_no}
+			,#{scpus_ret_cd}
+			,#{scpus_ret_message}
+			,#{total_price}
+			,#{order_reference_code}
+			,#{cs_id}
+			,#{cs_status}
+			,#{cs_submit_time_utc}
+			,#{pos_ret_cd}
+			,#{pos_ret_message}
+			,#{email, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsEmailTypeHandler}
+			,#{first_name, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			,#{last_name, typeHandler=com.samsung.dkms.mybatis.typehandler.DkmsNameTypeHandler}
+			,#{sales_order_number}
+			,#{billing_order_number}
+			,#{ecommerce}
+			,#{recon}
+			,#{card_type}
+			,#{cancel_type}
+        )
+        
+            <if test="orderItem != null">
+                <foreach collection="orderItem" item="item">
+                    INTO POS_CANCEL_ORDER_DETAIL ( CANCEL_ORDER_ITEM_ID, CANCEL_ORDER_ID, ORDER_ID, ORDER_ITEM_ID, SERIAL_NUMBER, MODEL_CD, SKU, SVCPACKSKU, QUANTITY, UNIT_PRICE, TOTAL_PRICE, TAX_AMOUNT, TAX_RATE)
+                    VALUES (
+	                     #{item.cancel_order_item_id, jdbcType=VARCHAR}
+	                    ,#{item.cancel_order_id, jdbcType=VARCHAR}
+	                    ,#{item.order_id, jdbcType=VARCHAR}
+	                    ,#{item.order_item_id, jdbcType=VARCHAR}
+	                    ,#{item.serial_number, jdbcType=VARCHAR}
+	                    ,#{item.model_cd, jdbcType=VARCHAR}
+	                    ,#{item.sku, jdbcType=VARCHAR}
+	                    ,#{item.svcpacksku, jdbcType=VARCHAR}
+	                    ,#{item.quantity, jdbcType=INTEGER}
+	                    ,#{item.unit_price, jdbcType=DOUBLE}
+	                    ,#{item.total_price, jdbcType=DOUBLE}
+	                    ,#{item.tax_amount, jdbcType=DOUBLE}
+	                    ,#{item.tax_rate, jdbcType=DOUBLE}
+                    )
+                </foreach>
+                
+            </if>
+        
+        SELECT 1 FROM DUAL
+    </insert>
+    
+    
+    <!-- Insert Detail Ticket -->
+	<insert id="insertFrontError" parameterType="sea.scplus.consumer.vo.SaveFrontError">        
+        INSERT INTO POS_FRONT_ERROR ( 
+             Event_Time, Page_Url, Module_Name, Error_Message, Shared_Value
+		) VALUES ( sysdate,
+             #{pageUrl}       
+			,#{moduleName}
+			,#{errorMessage}
+			,#{sharedValue}
+        )
+    </insert>
+</mapper>

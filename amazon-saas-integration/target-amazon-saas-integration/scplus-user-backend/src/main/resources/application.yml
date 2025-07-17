@@ -1,0 +1,131 @@
+spring:
+  profiles:
+    active: default
+  datasource:
+    url: jdbc:log4jdbc:oracle:thin:@105.1.11.179:1525:GSPND
+    username: scplus
+    password: ENC(DXAuseuJU0+ZYDnZr508tc/hXOxtjFk0)
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  web:
+    locale: en
+  messages:
+    cache-seconds: -1 # Loaded resource bundle files cache expiration, in seconds. When set to -1, bundles are cached forever.
+    basename: classpath:/config/properties/messages # Comma-separated list of basenames, each following the ResourceBundle convention.
+    encoding: UTF-8 # Message bundles encoding.
+  jwt:
+    secret: ENC(aDtVXpQ9nVct8gr4JRF9jSScJrB3oDs+Y/hYH+mpSJhXyc+7kmQ0PUjSOb1MfHoLy4gGJCf1ZadaIGDXawAwud8tMfVKOcORGg67xuCfCzceVfqUV/Kls6fqiwY5Yq06w7+oI3RMuHnbLXqXc0s8G7+ZVzUPgIKbvszT3qgD7coJSJbEd360STF9r21N+W26)
+  mail:
+    host: smtp.w2.samsung.net #105.1.2.51
+    port: 25
+    username: svc.noreply@samsung.com 
+    password: ENC(ZJVoaxyz69f+pTjCaG9sdhVpj03tNVjT)
+    properties:
+      mail:
+        smtp:
+          from: svc.noreply@samsung.com
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
+    
+server:
+  servlet:
+    context-path: /consumer
+            
+scplus:
+  channel: CEPOS
+  company: C310
+  username: CEPOS
+  password: ENC(Pqn1JPY9hPVHB+8I7/7rYuc2GPnWpa7O)
+  legacyusername: 47
+  legacypassword: ENC(cGvmDYz/eC0vJnh1i7iScWkSyHu49ION) 
+  baseUrl: http://gcsc.samsung.com/
+  channelSigninURL: scmpapi/v1/channel/signin
+  gspnCheckSerialNoValidationURL: scmpapi/v1/channel/gspnCheckSerialNoValidation
+  contractStatusURL: scmpapi/v1/channel/contractStatus
+  getSpcValidationURL: scmpapi/v1/getSpcValidation
+  signinURL: scmpapi/v1/signin
+  contractCancelURL: scmpapi/v1/channel/contractCancel
+  contractCreateURL: scmpapi/v1/channel/contractCreate
+  emaiHookURL: scmpapi/v1/scp/cxEmailDelivery
+  amazonCheckUserURL: scmpapi/v1/amazon/check-user
+  amazonFulfillmentURL: scmpapi/v1/amazon/fulfillment
+  
+
+cepos:
+  targetSystem: CONSUMER
+  username: CONSUMER
+  password: ENC(z9CSjzcv546xx0Brl30JDErUS03bV9ex)
+  baseURL: http://scpposdev.samsungsupport.com/api/
+  tokenURL: signin  
+  gspnCheckSerialNoValidationURL: scplus/gspnCheckSerialNoValidation
+  getSpcValidationURL: scplus/getSpcValidation
+  searchContractBySerialNoURL: scplus/searchContractBySerialNo
+  getTicketInfoURL: scplus/getTicketInfo
+  contractStatusURL: scplus/contractStatus
+  contractCancelURL: scplus/contractCancel
+  contractCreateURL: scplus/contractCreate
+  sendFinanceReconURL: scplus/sendFinanceRecon
+  cancelRequestURL: order/cancelRequest
+  cyberPaymentURL: cyber/payment
+  cyberCancelURL: cyber/cancel
+  cyberCaptureURL: cyber/capture
+  cyberReversalURL: cyber/reversal
+  cyberCreditURL: cyber/credit
+  getTaxURL: erp/getTax
+  getSalesOrderURL: erp/getSalesOrder
+  getBillingOrderURL: erp/getBillingOrder
+  getECommerceURL: erp/getECommerce
+  
+  
+cs:
+  authenticationType: http_signature
+  merchantID: seascplus
+  merchantKeyIdSignature: ENC(ypspJwfqqUwu4aWeGP4f1HL6glkSmdtea2x4Rf7TGHCxQsEnb7zVBy8mIVOe5Kq0)
+  merchantsecretKeyDigest: ENC(ML/5E2DkbCZskeScfCBQi+dgzXG9qrG/v39F8ipTPniqwvwRhwCMofyhpaWnx4PyBr6YZyJ7VDQ=)
+  baseURL: https://apitest.cybersource.com/
+  paymentURL: pts/v2/payments
+  cancelURL: pts/v2/captures/tmpid/voids
+  host: apitest.cybersource.com
+        
+mybatis:
+  type-aliases-package: sea.scplus.consumer.vo
+  type-handlers-package: com.samsung.dkms.mybatis.typehandler
+  configuration:
+    defaultExecutorType: REUSE
+    jdbcTypeForNull: VARCHAR
+
+domain:
+  protocol: http
+  name: scplusdev.samsungsupport.com
+
+frame:
+  domain:
+    name: frame.scplusdev.samsungsupport.com
+hq:
+  check:
+    do:
+      pc: api
+      mobile: mobile
+      
+email:
+  error:
+    to: 'junpark@sea.samsung.com'
+  image:
+    url:  https://privacypost.sea.samsung.com/images/
+
+dkms:
+  task-id: 6E7:scus_encryption
+  service_running_on: idc
+  cache_duration_hours: 24
+  server:
+    url: https://stg.bdcdkms.com/v1
+  cred:
+    path: classpath:dkms/dkmsCredential.json
